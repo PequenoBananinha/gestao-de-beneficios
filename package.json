@@ -1,0 +1,24 @@
+{
+  "name": "gestao-de-beneficios",
+  "version": "1.0.0",
+  "description": "API REST que calcula VR, VT e vale mercado por funcionário, com regras configuráveis (dias úteis, feriados, faltas, afastamentos) e exportação para planilha.",
+  "license": "ISC",
+  "author": "Renato Mendes Tesserolli",
+  "type": "commonjs",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
