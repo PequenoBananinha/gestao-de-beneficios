@@ -12,8 +12,5 @@ dist/
 coverage/
 
 # Prisma
-.claude/
-.cursor/
-.agents/
-.devin/
 /src/generated/prisma
+/src/generated/

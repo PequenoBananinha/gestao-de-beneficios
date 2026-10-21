@@ -1,3 +1,4 @@
+// use prisma-8
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -10,4 +11,15 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+model Funcionarios {
+  id Int @id @default(autoincrement())
+  nome String
+  matricula String @unique
+  cargo String?
+  ativo Boolean @default(true)
+  criadoEm DateTime @default(now())
+
+  @@map("funcionarios")
 }
