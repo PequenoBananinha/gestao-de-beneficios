@@ -10,3 +10,10 @@ node_modules/
 dist/
 
 coverage/
+
+# Prisma
+.claude/
+.cursor/
+.agents/
+.devin/
+/src/generated/prisma
