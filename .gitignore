@@ -14,3 +14,6 @@ coverage/
 # Prisma
 /src/generated/prisma
 /src/generated/
+
+#claude
+claude.md
