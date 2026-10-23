@@ -1,5 +1,6 @@
 import express from "express";
 import { prisma } from "./lib/prisma";
+import { Prisma } from "./generated/prisma/client";
 
 const app = express();
 
@@ -17,10 +18,20 @@ app.get("/funcionarios", async (_req, res) => {
 
 app.post("/funcionarios", async (req, res) => {
   const { nome, matricula, cargo } = req.body;
-  const funcionario = await prisma.funcionarios.create({
-    data: { nome, matricula, cargo },
-  });
-  res.status(201).json(funcionario);
+  try {                                                     
+    const funcionario = await prisma.funcionarios.create({  
+      data: { nome, matricula, cargo },
+    });
+    res.status(201).json(funcionario);
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return res.status(409).json({ error: "Matrícula já existe" });
+    }
+    throw error;                                            
+  }
 });
 
 app.listen(3333, () => {
