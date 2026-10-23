@@ -16,10 +16,28 @@ app.get("/funcionarios", async (_req, res) => {
   res.json(funcionarios);
 });
 
+app.get("/funcionarios/:id", async (req, res) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
+
+  const funcionario = await prisma.funcionarios.findUnique({
+    where: { id },
+  });
+
+  if (!funcionario) {
+    return res.status(404).json({ error: "Funcionário não encontrado" });
+  }
+
+  return res.status(200).json(funcionario);
+});
+
 app.post("/funcionarios", async (req, res) => {
   const { nome, matricula, cargo } = req.body;
-  try {                                                     
-    const funcionario = await prisma.funcionarios.create({  
+  try {
+    const funcionario = await prisma.funcionarios.create({
       data: { nome, matricula, cargo },
     });
     res.status(201).json(funcionario);
@@ -30,7 +48,7 @@ app.post("/funcionarios", async (req, res) => {
     ) {
       return res.status(409).json({ error: "Matrícula já existe" });
     }
-    throw error;                                            
+    throw error;
   }
 });
 

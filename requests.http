@@ -1,6 +1,18 @@
 ### Listar funcionários
 GET http://localhost:3333/funcionarios
 
+###
+GET http://localhost:3333/funcionarios/1
+
+###
+GET http://localhost:3333/funcionarios/99
+
+###
+GET http://localhost:3333/funcionarios/abc
+
+###
+GET http://localhost:3333/funcionarios/1.5
+
 ### Criar funcionário
 POST http://localhost:3333/funcionarios
 Content-Type: application/json
