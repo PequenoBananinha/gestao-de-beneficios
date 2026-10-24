@@ -52,6 +52,33 @@ app.post("/funcionarios", async (req, res) => {
   }
 });
 
+app.put("/funcionarios/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const { nome, matricula, cargo, ativo } = req.body;
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
+
+  try {
+    const funcionario = await prisma.funcionarios.update({
+      where: { id },
+      data: { nome, matricula, cargo, ativo },
+    });
+    res.status(200).json(funcionario);
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return res.status(409).json({ error: "Matrícula já existe" });
+      }
+      if (error.code === "P2025") {
+        return res.status(404).json({ error: "Funcionário não encontrado" });
+      }
+    }
+    throw error;
+  }
+});
+
 app.listen(3333, () => {
   console.log("Servidor rodando em http://localhost:3333");
 });

@@ -1,16 +1,16 @@
-### Listar funcionários
+### Listar todos os funcionários
 GET http://localhost:3333/funcionarios
 
-###
+### Buscar funcionário por ID (ID existente)
 GET http://localhost:3333/funcionarios/1
 
-###
+### Buscar funcionário por ID inexistente (deve retornar 404)
 GET http://localhost:3333/funcionarios/99
 
-###
+### Buscar funcionário com ID não numérico (deve retornar 400)
 GET http://localhost:3333/funcionarios/abc
 
-###
+### Buscar funcionário com ID decimal (deve retornar 400)
 GET http://localhost:3333/funcionarios/1.5
 
 ### Criar funcionário
@@ -21,4 +21,64 @@ Content-Type: application/json
   "nome": "Ana Souza",
   "matricula": "F0003",
   "cargo": "Analista"
+}
+
+### Atualizar funcionário completo
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "nome": "Ana Souza",
+  "matricula": "F0003",
+  "cargo": "Analista",
+  "ativo": true
+}
+
+# ==============================================================================
+# TESTES DE ATUALIZAÇÃO (PUT)
+# ==============================================================================
+
+### Teste 1: Atualizar cargo para "Coordenadora" (Esperado: 200 OK)
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "cargo": "Coordenadora"
+}
+
+### Teste 2: Inativar funcionário (Esperado: 200 OK)
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "ativo": false
+}
+
+### Conferir Teste 2: Verificar se 'ativo' passou para false (Esperado: 200 OK)
+GET http://localhost:3333/funcionarios/1
+
+### Teste 3: Atualizar funcionário inexistente (Esperado: 404 Not Found)
+PUT http://localhost:3333/funcionarios/999
+Content-Type: application/json
+
+{
+  "cargo": "Gerente"
+}
+
+### Teste 4: ID inválido/alfanumérico (Esperado: 400 Bad Request)
+PUT http://localhost:3333/funcionarios/abc
+Content-Type: application/json
+
+{
+  "cargo": "Gerente"
+}
+
+### Teste 5: Conflito de matrícula já existente (Esperado: 409 Conflict)
+# Nota: Para acionar o erro de duplicidade, tente atualizar o ID 1 (ou outro id)
+# usando a matrícula "F0003" que já pertence ao funcionário 1.
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "matricula": "F0003"
 }
