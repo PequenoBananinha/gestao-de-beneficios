@@ -79,6 +79,28 @@ app.put("/funcionarios/:id", async (req, res) => {
   }
 });
 
+app.delete("/funcionarios/:id", async (req, res) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ error: "ID inválido" });
+  }
+
+  try {
+    await prisma.funcionarios.delete({
+      where: { id },
+    });
+    res.sendStatus(204);
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        return res.status(404).json({ error: "Funcionário não encontrado" });
+      }
+    }
+    throw error;
+  }
+});
+
 app.listen(3333, () => {
   console.log("Servidor rodando em http://localhost:3333");
 });
