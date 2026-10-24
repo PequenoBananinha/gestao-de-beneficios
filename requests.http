@@ -93,6 +93,13 @@ Content-Type: application/json
   "matricula": "F0003"
 }
 
+### Teste 6: Atualizar funcionário com ID alfanumérico (Esperado: 400 Bad Request)
+PUT http://localhost:3333/funcionarios/abc
+Content-Type: application/json
+
+{
+  "cargo": "Gerente"
+}
 
 # ==============================================================================
 # EXCLUSÃO (DELETE)
