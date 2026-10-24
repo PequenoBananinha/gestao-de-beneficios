@@ -1,0 +1,126 @@
+# ==============================================================================
+# LEITURA / CONSULTA (GET)
+# ==============================================================================
+
+### Teste 1: Listar todos os funcionários (Esperado: 200 OK)
+GET http://localhost:3333/funcionarios
+
+### Teste 2: Buscar funcionário por ID existente (Esperado: 200 OK)
+GET http://localhost:3333/funcionarios/1
+
+### Teste 3: Buscar funcionário inexistente (Esperado: 404 Not Found)
+GET http://localhost:3333/funcionarios/99
+
+### Teste 4: Buscar funcionário com ID alfanumérico (Esperado: 400 Bad Request)
+GET http://localhost:3333/funcionarios/abc
+
+### Teste 5: Buscar funcionário com ID decimal (Esperado: 400 Bad Request)
+GET http://localhost:3333/funcionarios/1.5
+
+
+# ==============================================================================
+# CRIAÇÃO (POST)
+# ==============================================================================
+
+### Teste 1: Criar novo funcionário com sucesso (Esperado: 201 Created)
+POST http://localhost:3333/funcionarios
+Content-Type: application/json
+
+{
+  "nome": "Mariana Menezes",
+  "matricula": "F0004",
+  "cargo": "Analista"
+}
+
+### Teste 2: Criar funcionário com matrícula já existente (Esperado: 409 Conflict)
+POST http://localhost:3333/funcionarios
+Content-Type: application/json
+
+{
+  "nome": "João Silva",
+  "matricula": "F0001",
+  "cargo": "Desenvolvedor"
+}
+
+
+# ==============================================================================
+# ATUALIZAÇÃO (PUT)
+# ==============================================================================
+
+### Teste 1: Atualizar funcionário completo (Esperado: 200 OK)
+PUT http://localhost:3333/funcionarios/12
+Content-Type: application/json
+
+{
+  "nome": "Ana Souza",
+  "matricula": "F0003",
+  "cargo": "Analista",
+  "ativo": true
+}
+
+### Teste 2: Atualizar apenas o cargo (Esperado: 200 OK)
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "cargo": "Coordenadora"
+}
+
+### Teste 3: Inativar funcionário (Esperado: 200 OK)
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "ativo": false
+}
+
+### Conferir Teste 3: Verificar se o status 'ativo' foi alterado para false (Esperado: 200 OK)
+GET http://localhost:3333/funcionarios/1
+
+### Teste 4: Atualizar funcionário inexistente (Esperado: 404 Not Found)
+PUT http://localhost:3333/funcionarios/999
+Content-Type: application/json
+
+{
+  "cargo": "Gerente"
+}
+
+### Teste 5: Conflito de matrícula já existente (Esperado: 409 Conflict)
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "matricula": "F0003"
+}
+
+### Teste 6: Atualizar funcionário com ID alfanumérico (Esperado: 400 Bad Request)
+PUT http://localhost:3333/funcionarios/abc
+Content-Type: application/json
+
+{
+  "cargo": "Gerente"
+}
+
+# ==============================================================================
+# EXCLUSÃO (DELETE)
+# ==============================================================================
+
+### Preparação: Criar funcionário dinâmico para exclusão (Esperado: 201 Created)
+# @name criarFuncionarioParaDeletar
+POST http://localhost:3333/funcionarios
+Content-Type: application/json
+
+{
+  "nome": "Funcionario Temporario",
+  "matricula": "F9999",
+  "cargo": "Analista"
+}
+
+### Teste 1: Deletar funcionário existente (Esperado: 204 No Content)
+DELETE http://localhost:3333/funcionarios/{{criarFuncionarioParaDeletar.response.body.id}}
+
+### Teste 2: Deletar funcionário inexistente / já removido (Esperado: 404 Not Found)
+DELETE http://localhost:3333/funcionarios/{{criarFuncionarioParaDeletar.response.body.id}}
+
+### Teste 3: Deletar funcionário com ID alfanumérico (Esperado: 400 Bad Request)
+DELETE http://localhost:3333/funcionarios/abc
