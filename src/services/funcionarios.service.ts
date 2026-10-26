@@ -2,9 +2,9 @@ import { AppError } from "../errors/app-error";
 import * as funcionariosRepository from "../repositories/funcionarios.repository";
 
 import type {
-  CriarFuncionarioDados,
-  AtualizarFuncionarioDados,
-} from "../repositories/funcionarios.repository";
+  CriarFuncionarioInput,
+  AtualizarFuncionarioInput,
+} from "../schemas/funcionarios.schema";
 
 export function listar() {
   return funcionariosRepository.listar();
@@ -20,11 +20,11 @@ export async function buscarPorId(id: number) {
   return funcionario;
 }
 
-export function criar(dados: CriarFuncionarioDados) {
+export function criar(dados: CriarFuncionarioInput) {
   return funcionariosRepository.criar(dados);
 }
 
-export function atualizar(id: number, dados: AtualizarFuncionarioDados) {
+export function atualizar(id: number, dados: AtualizarFuncionarioInput) {
   return funcionariosRepository.atualizar(id, dados);
 }
 

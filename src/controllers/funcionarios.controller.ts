@@ -29,7 +29,7 @@ export async function criar(req: Request, res: Response) {
 
 export async function atualizar(req: Request, res: Response) {
   const { id } = idParamSchema.parse(req.params);
-  const dados =  atualizarFuncionarioSchema.parse(req.body);
+  const dados = atualizarFuncionarioSchema.parse(req.body);
 
   const funcionarioAtualizado = await funcionariosService.atualizar(id, dados);
 
