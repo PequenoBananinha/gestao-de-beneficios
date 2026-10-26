@@ -1,8 +1,13 @@
 import express from "express";
 import { Prisma } from "./generated/prisma/client";
 
-// Import functions from the repository
-import { listar, buscarPorId, criar, atualizar, remover } from "./repositories/funcionarios.repository";
+import {
+  listar,
+  buscarPorId,
+  criar,
+  atualizar,
+  remover,
+} from "./services/funcionarios.service";
 
 const app = express();
 
