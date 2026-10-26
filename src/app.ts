@@ -1,6 +1,8 @@
 import express from "express";
-import { prisma } from "./lib/prisma";
 import { Prisma } from "./generated/prisma/client";
+
+// Import functions from the repository
+import { listar, buscarPorId, criar, atualizar, remover } from "./repositories/funcionarios.repository";
 
 const app = express();
 
@@ -12,7 +14,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.get("/funcionarios", async (_req, res) => {
-  const funcionarios = await prisma.funcionarios.findMany();
+  const funcionarios = await listar();
   res.json(funcionarios);
 });
 
@@ -23,9 +25,7 @@ app.get("/funcionarios/:id", async (req, res) => {
     return res.status(400).json({ error: "ID inválido" });
   }
 
-  const funcionario = await prisma.funcionarios.findUnique({
-    where: { id },
-  });
+  const funcionario = await buscarPorId(id);
 
   if (!funcionario) {
     return res.status(404).json({ error: "Funcionário não encontrado" });
@@ -37,9 +37,7 @@ app.get("/funcionarios/:id", async (req, res) => {
 app.post("/funcionarios", async (req, res) => {
   const { nome, matricula, cargo } = req.body;
   try {
-    const funcionario = await prisma.funcionarios.create({
-      data: { nome, matricula, cargo },
-    });
+    const funcionario = await criar({ nome, matricula, cargo });
     res.status(201).json(funcionario);
   } catch (error) {
     if (
@@ -61,10 +59,7 @@ app.put("/funcionarios/:id", async (req, res) => {
   }
 
   try {
-    const funcionario = await prisma.funcionarios.update({
-      where: { id },
-      data: { nome, matricula, cargo, ativo },
-    });
+    const funcionario = await atualizar(id, { nome, matricula, cargo, ativo });
     res.status(200).json(funcionario);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -87,9 +82,7 @@ app.delete("/funcionarios/:id", async (req, res) => {
   }
 
   try {
-    await prisma.funcionarios.delete({
-      where: { id },
-    });
+    await remover(id);
     res.sendStatus(204);
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
