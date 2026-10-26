@@ -1,3 +1,4 @@
+import "./lib/zod";
 import express from "express";
 import { funcionariosRouter } from "./routes/funcionarios.routes";
 

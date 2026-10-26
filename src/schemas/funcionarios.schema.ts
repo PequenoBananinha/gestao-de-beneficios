@@ -1,7 +1,4 @@
 import { z } from "zod";
-import { ptBR } from "zod/locales"
- 
-z.config(ptBR());
 
 export const criarFuncionarioSchema = z.object({
   nome: z.string().trim().min(1),
