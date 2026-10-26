@@ -1,4 +1,4 @@
-import {Router} from "express";
+import { Router } from "express";
 import * as funcionariosController from "../controllers/funcionarios.controller";
 
 const router = Router();
