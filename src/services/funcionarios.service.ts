@@ -1,3 +1,4 @@
+import { AppError } from "../errors/app-error";
 import * as funcionariosRepository from "../repositories/funcionarios.repository";
 
 import type {
@@ -9,8 +10,14 @@ export function listar() {
   return funcionariosRepository.listar();
 }
 
-export function buscarPorId(id: number) {
-  return funcionariosRepository.buscarPorId(id);
+export async function buscarPorId(id: number) {
+  const funcionario = await funcionariosRepository.buscarPorId(id);
+
+  if (!funcionario) {
+    throw new AppError(404, "Funcionário não encontrado");
+  }
+
+  return funcionario;
 }
 
 export function criar(dados: CriarFuncionarioDados) {

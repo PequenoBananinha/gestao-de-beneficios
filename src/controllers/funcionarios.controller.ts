@@ -16,10 +16,6 @@ export async function buscarPorId(req: Request, res: Response) {
 
   const funcionario = await funcionariosService.buscarPorId(id);
 
-  if (!funcionario) {
-    return res.status(404).json({ error: "Funcionário não encontrado" });
-  }
-
   return res.status(200).json(funcionario);
 }
 
@@ -27,7 +23,11 @@ export async function criar(req: Request, res: Response) {
   const { nome, matricula, cargo } = req.body;
 
   try {
-    const funcionario = await funcionariosService.criar({ nome, matricula, cargo });
+    const funcionario = await funcionariosService.criar({
+      nome,
+      matricula,
+      cargo,
+    });
     return res.status(201).json(funcionario);
   } catch (error) {
     if (
