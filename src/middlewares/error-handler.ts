@@ -32,13 +32,13 @@ export function errorHandler(
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === "P2002") {
       return res.status(409).json({
-        error: "Matrícula já existe",
+        error: "Registro já existe",
       });
     }
 
     if (err.code === "P2025") {
       return res.status(404).json({
-        error: "Funcionário não encontrado",
+        error: "Registro não encontrado",
       });
     }
   }
