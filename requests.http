@@ -28,7 +28,7 @@ Content-Type: application/json
 
 {
   "nome": "Mariana Menezes",
-  "matricula": "F00010",
+  "matricula": "F0010",
   "cargo": "Analista"
 }
 
