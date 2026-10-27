@@ -135,7 +135,7 @@ Content-Type: application/json
   "ativo": "sim"
 }
 
-### Teste 8: Atualizar funcionário inexistente (Esperado: 404 Not Found - Prisma P2025)
+### Teste 8: Atualizar funcionário inexistente (Esperado: 404 Not Found - AppError)
 PUT http://localhost:3333/funcionarios/9999
 Content-Type: application/json
 
@@ -186,7 +186,7 @@ Content-Type: application/json
 ### Teste 1: Deletar funcionário existente (Esperado: 204 No Content)
 DELETE http://localhost:3333/funcionarios/{{criarFuncionarioParaDeletar.response.body.id}}
 
-### Teste 2: Deletar funcionário já removido / inexistente (Esperado: 404 Not Found - Prisma P2025)
+### Teste 2: Deletar funcionário já removido / inexistente (Esperado: 404 Not Found - AppError)
 DELETE http://localhost:3333/funcionarios/{{criarFuncionarioParaDeletar.response.body.id}}
 
 ### Teste 3: Deletar funcionário com ID 0 (Esperado: 400 Bad Request - Zod positive)

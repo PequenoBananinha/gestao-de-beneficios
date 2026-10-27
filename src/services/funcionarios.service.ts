@@ -24,10 +24,12 @@ export function criar(dados: CriarFuncionarioInput) {
   return funcionariosRepository.criar(dados);
 }
 
-export function atualizar(id: number, dados: AtualizarFuncionarioInput) {
+export async function atualizar(id: number, dados: AtualizarFuncionarioInput) {
+  await buscarPorId(id);
   return funcionariosRepository.atualizar(id, dados);
 }
 
-export function remover(id: number) {
+export async function remover(id: number) {
+  await buscarPorId(id);
   return funcionariosRepository.remover(id);
 }
