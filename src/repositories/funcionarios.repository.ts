@@ -1,17 +1,5 @@
 import { prisma } from "../lib/prisma";
-
-export type CriarFuncionarioDados = {
-  nome: string;
-  matricula: string;
-  cargo?: string;
-};
-
-export type AtualizarFuncionarioDados = {
-  nome?: string;
-  matricula?: string;
-  cargo?: string;
-  ativo?: boolean;
-};
+import type { CriarFuncionarioInput, AtualizarFuncionarioInput } from "../schemas/funcionarios.schema";
 
 export function listar() {
   return prisma.funcionarios.findMany();
@@ -23,13 +11,13 @@ export function buscarPorId(id: number) {
   });
 }
 
-export function criar(dados: CriarFuncionarioDados) {
+export function criar(dados: CriarFuncionarioInput) {
   return prisma.funcionarios.create({
     data: dados,
   });
 }
 
-export function atualizar(id: number, dados: AtualizarFuncionarioDados) {
+export function atualizar(id: number, dados: AtualizarFuncionarioInput) {
   return prisma.funcionarios.update({
     where: { id },
     data: dados,

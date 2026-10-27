@@ -1,4 +1,15 @@
 # ==============================================================================
+# SAÚDE DA API
+# ==============================================================================
+
+### Health Check (Esperado: 200 OK)
+GET http://localhost:3333/health
+
+### Rota Inexistente (Esperado: 404 Not Found - notFoundHandler)
+GET http://localhost:3333/rota-inexistente
+
+
+# ==============================================================================
 # LEITURA / CONSULTA (GET)
 # ==============================================================================
 
@@ -8,13 +19,16 @@ GET http://localhost:3333/funcionarios
 ### Teste 2: Buscar funcionário por ID existente (Esperado: 200 OK)
 GET http://localhost:3333/funcionarios/1
 
-### Teste 3: Buscar funcionário inexistente (Esperado: 404 Not Found)
-GET http://localhost:3333/funcionarios/99
+### Teste 3: Buscar funcionário inexistente (Esperado: 404 Not Found - AppError)
+GET http://localhost:3333/funcionarios/9999
 
-### Teste 4: Buscar funcionário com ID alfanumérico (Esperado: 400 Bad Request)
+### Teste 4: Buscar funcionário com ID 0 (Esperado: 400 Bad Request - Zod positive)
+GET http://localhost:3333/funcionarios/0
+
+### Teste 5: Buscar funcionário com ID alfanumérico (Esperado: 400 Bad Request - Zod int)
 GET http://localhost:3333/funcionarios/abc
 
-### Teste 5: Buscar funcionário com ID decimal (Esperado: 400 Bad Request)
+### Teste 6: Buscar funcionário com ID decimal (Esperado: 400 Bad Request - Zod int)
 GET http://localhost:3333/funcionarios/1.5
 
 
@@ -28,17 +42,36 @@ Content-Type: application/json
 
 {
   "nome": "Mariana Menezes",
-  "matricula": "F00010",
+  "matricula": "F0010",
   "cargo": "Analista"
 }
 
-### Teste 2: Criar funcionário com matrícula já existente (Esperado: 409 Conflict)
+### Teste 2: Criar funcionário sem corpo (Esperado: 400 Bad Request - Zod)
+POST http://localhost:3333/funcionarios
+
+### Teste 3: Criar funcionário com corpo vazio {} (Esperado: 400 Bad Request - Zod)
+POST http://localhost:3333/funcionarios
+Content-Type: application/json
+
+{}
+
+### Teste 4: Criar com nome vazio ou só espaços (Esperado: 400 Bad Request - Zod min(1))
+POST http://localhost:3333/funcionarios
+Content-Type: application/json
+
+{
+  "nome": "   ",
+  "matricula": "F0020",
+  "cargo": "Desenvolvedor"
+}
+
+### Teste 5: Criar funcionário com matrícula duplicada (Esperado: 409 Conflict - Prisma P2002)
 POST http://localhost:3333/funcionarios
 Content-Type: application/json
 
 {
   "nome": "João Silva",
-  "matricula": "F0001",
+  "matricula": "F0010",
   "cargo": "Desenvolvedor"
 }
 
@@ -48,17 +81,17 @@ Content-Type: application/json
 # ==============================================================================
 
 ### Teste 1: Atualizar funcionário completo (Esperado: 200 OK)
-PUT http://localhost:3333/funcionarios/12
+PUT http://localhost:3333/funcionarios/1
 Content-Type: application/json
 
 {
   "nome": "Ana Souza",
-  "matricula": "F0003",
-  "cargo": "Analista",
+  "matricula": "F0001",
+  "cargo": "Analista Sênior",
   "ativo": true
 }
 
-### Teste 2: Atualizar apenas o cargo (Esperado: 200 OK)
+### Teste 2: Atualização parcial - apenas cargo (Esperado: 200 OK)
 PUT http://localhost:3333/funcionarios/1
 Content-Type: application/json
 
@@ -66,7 +99,7 @@ Content-Type: application/json
   "cargo": "Coordenadora"
 }
 
-### Teste 3: Inativar funcionário (Esperado: 200 OK)
+### Teste 3: Atualização parcial - inativar funcionário (Esperado: 200 OK)
 PUT http://localhost:3333/funcionarios/1
 Content-Type: application/json
 
@@ -74,32 +107,66 @@ Content-Type: application/json
   "ativo": false
 }
 
-### Conferir Teste 3: Verificar se o status 'ativo' foi alterado para false (Esperado: 200 OK)
+### Conferir Teste 3: Verificar status 'ativo' alterado para false (Esperado: 200 OK)
 GET http://localhost:3333/funcionarios/1
 
-### Teste 4: Atualizar funcionário inexistente (Esperado: 404 Not Found)
-PUT http://localhost:3333/funcionarios/999
+### Teste 4: Atualizar sem corpo (Esperado: 400 Bad Request - Zod)
+PUT http://localhost:3333/funcionarios/1
+
+### Teste 5: Atualizar com corpo vazio {} (Esperado: 200 OK - PUT parcial com body vazio)
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{}
+
+### Teste 6: Atualizar com nome vazio (Esperado: 400 Bad Request - Zod min(1))
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "nome": ""
+}
+
+### Teste 7: Atualizar com tipo booleano inválido (Esperado: 400 Bad Request - Zod boolean)
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "ativo": "sim"
+}
+
+### Teste 8: Atualizar funcionário inexistente (Esperado: 404 Not Found - AppError)
+PUT http://localhost:3333/funcionarios/9999
 Content-Type: application/json
 
 {
   "cargo": "Gerente"
 }
 
-### Teste 5: Conflito de matrícula já existente (Esperado: 409 Conflict)
-PUT http://localhost:3333/funcionarios/1
+### Teste 9: Atualizar com ID 0 (Esperado: 400 Bad Request - Zod positive)
+PUT http://localhost:3333/funcionarios/0
 Content-Type: application/json
 
 {
-  "matricula": "F0003"
+  "cargo": "Gerente"
 }
 
-### Teste 6: Atualizar funcionário com ID alfanumérico (Esperado: 400 Bad Request)
+### Teste 10: Atualizar com ID alfanumérico (Esperado: 400 Bad Request - Zod int)
 PUT http://localhost:3333/funcionarios/abc
 Content-Type: application/json
 
 {
   "cargo": "Gerente"
 }
+
+### Teste 11: Conflito de matrícula já existente (Esperado: 409 Conflict - Prisma P2002)
+PUT http://localhost:3333/funcionarios/1
+Content-Type: application/json
+
+{
+  "matricula": "F0010"
+}
+
 
 # ==============================================================================
 # EXCLUSÃO (DELETE)
@@ -119,8 +186,11 @@ Content-Type: application/json
 ### Teste 1: Deletar funcionário existente (Esperado: 204 No Content)
 DELETE http://localhost:3333/funcionarios/{{criarFuncionarioParaDeletar.response.body.id}}
 
-### Teste 2: Deletar funcionário inexistente / já removido (Esperado: 404 Not Found)
+### Teste 2: Deletar funcionário já removido / inexistente (Esperado: 404 Not Found - AppError)
 DELETE http://localhost:3333/funcionarios/{{criarFuncionarioParaDeletar.response.body.id}}
 
-### Teste 3: Deletar funcionário com ID alfanumérico (Esperado: 400 Bad Request)
+### Teste 3: Deletar funcionário com ID 0 (Esperado: 400 Bad Request - Zod positive)
+DELETE http://localhost:3333/funcionarios/0
+
+### Teste 4: Deletar funcionário com ID alfanumérico (Esperado: 400 Bad Request - Zod int)
 DELETE http://localhost:3333/funcionarios/abc
